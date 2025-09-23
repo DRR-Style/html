@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Twitch Viewer Counter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #18181b;
+            color: #fff;
+            text-align: center;
+        }
+
+        #counter {
+            font-size: 2em;
+            margin-top: 20px;
+        }
+
+        .list {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Twitch Viewer Counter</h1>
+    <div id="counter">Loading...</div>
+    <div class="list" id="viewerList"></div>
+
+    <script>
+        const channel = "drr_style";  // <-- replace with your channel
+    const excludedUsers = ["nightbot", "streamelements"]; // add names to ignore
+
+    async function fetchViewers() {
+      try {
+        const res = await fetch(`https://tmi.twitch.tv/group/user/${channel}/chatters`);
+        const data = await res.json();
+
+        let viewers = data.chatters.viewers || [];
+
+        // Remove excluded users
+        viewers = viewers.filter(v => !excludedUsers.includes(v.toLowerCase()));
+
+        // Update counter
+        document.getElementById("counter").textContent = `Viewers: ${viewers.length}`;
+
+        // Show list
+        document.getElementById("viewerList").innerHTML = viewers.join(", ");
+      } catch (err) {
+        document.getElementById("counter").textContent = "Error fetching data";
+        console.error(err);
+      }
+    }
+
+    // Refresh every 30s
+    fetchViewers();
+    setInterval(fetchViewers, 30000);
+    </script>
+</body>
+</html>
