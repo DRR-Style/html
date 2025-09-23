@@ -32,8 +32,15 @@
 
     async function fetchViewers() {
       try {
-        const res = await fetch(`https://tmi.twitch.tv/group/user/${channel}/chatters`);
-        const data = await res.json();
+          //const res = await fetch(`https://tmi.twitch.tv/group/user/${channel}/chatters`);
+          const res = await fetch(
+              `https://api.allorigins.win/get?url=${encodeURIComponent(
+                  `https://tmi.twitch.tv/group/user/${channel}/chatters`
+              )}`
+          );
+          const json = await res.json();
+          const data = JSON.parse(json.contents);
+        //const data = await res.json();
 
         let viewers = data.chatters.viewers || [];
 
